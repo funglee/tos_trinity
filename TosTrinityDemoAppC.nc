@@ -62,7 +62,7 @@ implementation{
   App.VolRead -> VoltageC;
 
   App.ActiveTimer -> Timer0;
-  App.ReSleepTimer-> Timer1;
+  App.SleepTimer-> Timer1;
 
 
   //App.SenGenIO -> HplAtm128GeneralIOC.PortF3; // use ADC3 as GPIO output for sensing purpose

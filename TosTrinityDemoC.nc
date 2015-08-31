@@ -69,7 +69,7 @@ implementation
   
  	/******************* Declarations of functions and tasks **********************************/
 
- 	task void VoltageReadTask
+ 	task void VoltageReadTask()
  	{
  		call VolRead.read();
  	}
@@ -85,6 +85,7 @@ implementation
 		call SenVolReadStream.read(VOL_READ_PERIOD); 
   	}
 
+  	task void VolReadMsgSendTask();
 
   	event void Boot.booted() 
   	{
@@ -134,7 +135,7 @@ implementation
 	{
 		if(err==SUCCESS)
 		{
-			if(state = 0)
+			if(state == 0)
 			{
 				uint32_t now = call SleepTimer.getNow();
 				state = 1;
@@ -143,7 +144,7 @@ implementation
 			}
 			else
 			{
-				//post ReadStreamSenVoltageTask();
+				//post SenVoltageReadStreamTask();
 				post VolReadMsgSendTask();
 			}
 		}
@@ -180,10 +181,7 @@ implementation
   	}
   	
 
-  	event message_t * RadioSnoop.receive[am_id_t msg_type](message_t *msg, void *payload, uint8_t len)
-  	{
-		return msg;
-  	}	
+
  
   	/*************** Radio Send ***********************/
   	event void RadioSend.sendDone[am_id_t msg_type](message_t* msg, error_t error)
@@ -234,7 +232,6 @@ implementation
 	event void ActiveTimer.fired()
 	{
 		int i=0;
-		state = STATE_SEND;
 		
 		sen_vol_max = 0;
 		sen_vol_min = 10000;
@@ -244,7 +241,7 @@ implementation
 
 		for(i=0; i<SEN_BUFFER_SIZE; i++) sen_buffer[i]=0;
 
-		post ReadStreamSenVoltageTask();
+		post SenVoltageReadStreamTask();
 
 	}
 
@@ -294,7 +291,7 @@ implementation
 			sen_vol = 0;
 		}
 
-		call ReadioControl.start( );
+		call RadioControl.start( );
 	}
 
 
@@ -349,7 +346,7 @@ implementation
 			sen_vol_min = 10000;
 			sen_vol = 0;
 
-			post ReadStreamSenVoltageTask( );
+			post SenVoltageReadStreamTask( );
 		}
 		return;
 	}
@@ -370,7 +367,7 @@ implementation
 			sen_vol_min = 10000;
 			sen_vol = 0;
 
-			post ReadStreamSenVoltageTask( );
+			post SenVoltageReadStreamTask( );
 		}
 
 		
@@ -380,7 +377,7 @@ implementation
 	event void SleepTimer.fired()
 	{
 				
-		call ActiveTimer.startOneShot(TX_SLEEP_PERIOD);
+		call ActiveTimer.startOneShot(SLEEP_PERIOD);
 		
 		if(radio_busy)
 		{
@@ -394,9 +391,6 @@ implementation
 	}
 
 
-	event void ActiveTimer.fired()
-	{
-		post VoltageReadTask();
-	}
+
 }
 

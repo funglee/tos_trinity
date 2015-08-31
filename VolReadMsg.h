@@ -9,7 +9,7 @@ typedef nx_struct VolReadMsg
 	nx_uint32_t data_id;
 	nx_uint32_t data_max;
 	nx_uint32_t data_min;
-	nx_unit32_t data_mean;
+	nx_uint32_t data_mean;
 	
 
 } VolReadMsg;
