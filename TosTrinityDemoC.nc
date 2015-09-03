@@ -137,15 +137,15 @@ implementation
 		{
 			if(state == 0)
 			{
-				uint32_t now = call SleepTimer.getNow();
-				state = 1;
-				call SleepTimer.startPeriodicAt(now+10-ACTIVE_PERIOD, ACTIVE_PERIOD);
+				//uint32_t now = call SleepTimer.getNow();
+				//state = 1;
+				//call SleepTimer.startPeriodicAt(now+10-ACTIVE_PERIOD, ACTIVE_PERIOD);
 				//call RadioControl.stop();
 			}
 			else
 			{
 				//post SenVoltageReadStreamTask();
-				post VolReadMsgSendTask();
+				//post VolReadMsgSendTask();
 			}
 		}
 		else
